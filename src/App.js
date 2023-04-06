@@ -1,20 +1,9 @@
 import "./App.css";
-
+import Fileupload from "./components/Fileupload";
 function App() {
   return (
     <div className="App">
-      <h1>Balaji</h1>
-      <div class="btn-group" role="group" aria-label="Basic example">
-        <button type="button" class="btn btn-primary">
-          Left
-        </button>
-        <button type="button" class="btn btn-primary">
-          Middle
-        </button>
-        <button type="button" class="btn btn-primary">
-          Right
-        </button>
-      </div>
+      <Fileupload />
     </div>
   );
 }
