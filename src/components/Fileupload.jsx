@@ -13,6 +13,8 @@ export default function Fileupload() {
   const handleUpload = () => {
     if (!file) {
       alert("Please upload an image first!");
+    } else {
+      alert("Upload Successfully");
     }
     const storageRef = ref(storage, `/files/${file.name}`);
     const uploadTask = uploadBytesResumable(storageRef, file);
@@ -27,14 +29,9 @@ export default function Fileupload() {
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((url) => {
           setImage((state) => state.concat(url));
-
-          console.log(url);
         });
       }
     );
-    if (true) {
-      alert("Upload Succesfully");
-    }
   };
 
   return (
@@ -47,8 +44,19 @@ export default function Fileupload() {
           <div class="row">
             <div class="col-2"></div>
             <div class="col-8">
-              <input type="file" onChange={handleChange} accept="/image/*" />
-              <button onClick={handleUpload}>Upload to Firebase</button>
+              <input
+                type="file"
+                onChange={handleChange}
+                accept="/image/*"
+                class="hidden"
+              />
+              <button
+                type="button"
+                class="btn btn-primary"
+                onClick={handleUpload}
+              >
+                Upload to Firebase
+              </button>
             </div>
           </div>
         </div>
