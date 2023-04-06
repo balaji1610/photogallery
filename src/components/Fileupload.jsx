@@ -2,11 +2,9 @@ import { useState } from "react";
 
 import storage from "../Firebase/FirebaseConfigure";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-
+import Gallery from "./Gallery";
 export default function Fileupload() {
-  // State to store uploaded file
-  const [file, setFile] = useState(""); // progress
-  const [percent, setPercent] = useState(0); // Handle file upload event and update state
+  const [file, setFile] = useState("");
 
   const [image, setImage] = useState([]);
   function handleChange(event) {
@@ -16,19 +14,17 @@ export default function Fileupload() {
     if (!file) {
       alert("Please upload an image first!");
     }
-    const storageRef = ref(storage, `/files/${file.name}`); // progress can be paused and resumed. It also exposes progress updates. // Receives the storage reference and the file to upload.
+    const storageRef = ref(storage, `/files/${file.name}`);
     const uploadTask = uploadBytesResumable(storageRef, file);
     uploadTask.on(
       "state_changed",
       (snapshot) => {
         const percent = Math.round(
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-        ); // update progress
-        setPercent(percent);
+        );
       },
       (err) => console.log(err),
       () => {
-        // download url
         getDownloadURL(uploadTask.snapshot.ref).then((url) => {
           setImage((state) => state.concat(url));
 
@@ -36,66 +32,32 @@ export default function Fileupload() {
         });
       }
     );
+    if (true) {
+      alert("Upload Succesfully");
+    }
   };
-  console.log(image, "image");
 
   return (
     <div>
-      <input type="file" onChange={handleChange} accept="/image/*" />
-      <button onClick={handleUpload}>Upload to Firebase</button>
-      <p>{percent} "% done"</p>
-
-      <section>
+      <div class="container">
         <div
-          id="carouselExampleIndicators"
-          class="carousel slide"
-          data-bs-ride="carousel"
-          data-interval="10000"
+          class="col-md-12 col-sm-12"
+          style={{ marginTop: "50px", marginBottom: "150px" }}
         >
-          <div class="carousel-inner">
-            <div class="carousel-item active">
-              <img
-                src="https://firebase.google.com/images/social.png"
-                class="d-block w-100"
-                width="500"
-                height="350"
-                alt="01"
-              />
-            </div>
-            <div>
-              {image.map((val) => (
-                <div class="carousel-item">
-                  <img
-                    src={val}
-                    class="d-block w-100"
-                    width="500"
-                    height="350"
-                    alt="mappingImage"
-                  />
-                </div>
-              ))}
+          <div class="row">
+            <div class="col-2"></div>
+            <div class="col-8">
+              <input type="file" onChange={handleChange} accept="/image/*" />
+              <button onClick={handleUpload}>Upload to Firebase</button>
             </div>
           </div>
-          <button
-            class="carousel-control-prev"
-            type="button"
-            data-bs-target="#carouselExampleIndicators"
-            data-bs-slide="prev"
-          >
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-          </button>
-          <button
-            class="carousel-control-next"
-            type="button"
-            data-bs-target="#carouselExampleIndicators"
-            data-bs-slide="next"
-          >
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-          </button>
         </div>
-      </section>
+        <div class="col-md-12 col-sm-12">
+          <h1>
+            <Gallery image={image} />
+          </h1>
+        </div>
+      </div>
     </div>
   );
 }
